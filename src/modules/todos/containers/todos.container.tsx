@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import _ from "lodash";
-import { TodosComponent } from "../components/todos.component";
-import { fetchAllTodos, updateTodo } from "../services/todos.service";
-import { TodoType } from "../interfaces/todos.interface";
 import { AxiosResponse } from "axios";
+import { useRecoilState } from "recoil";
+import { TodosComponent } from "../components/todos.component";
+import { updateTodo } from "../services/todos.service";
+import { TodoType } from "../interfaces/todos.interface";
+
+import { todosQuery } from "../atoms/todos.atoms";
 
 export const TodosContainer = () => {
-    const [todos, setTodos] = useState<TodoType[]>([])
-
-    const fetchTodos = async () => {
-        const fetchedTodos: AxiosResponse<any> = await fetchAllTodos()
-        setTodos(fetchedTodos.data)
-    }
+    const [todos, setTodos] = useRecoilState<any>(todosQuery);
 
     const handleCompleteToggle = async ({todo}: {todo: TodoType}) => {
         const updatedTodo: AxiosResponse<any> = await updateTodo({todo: {...todo, completed: !todo.completed}})
@@ -20,10 +18,6 @@ export const TodosContainer = () => {
         localTodos.splice(indexOfTodo, 1, updatedTodo.data)
         setTodos(localTodos)
     }
-
-    useEffect(() => {
-        fetchTodos()
-    }, [])
 
     return <TodosComponent todos={todos} onCompleteToggle={handleCompleteToggle} />
 }
