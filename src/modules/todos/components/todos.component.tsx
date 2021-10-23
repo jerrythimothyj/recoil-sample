@@ -7,7 +7,7 @@ export const TodosComponent = ({todos, onCompleteToggle}: TodosComponentType) =>
             todos.map((todo:TodoType, index: number) => {
                 return <div key={index}>
                     {index+1}. {todo.title}
-                    <input type="checkbox" onClick={() => onCompleteToggle({todo})} />
+                    <input type="checkbox" onChange={() => onCompleteToggle({todo})} checked={todo.completed} />
                 </div>
             })
         }
